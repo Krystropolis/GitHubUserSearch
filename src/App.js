@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SearchInput from './SearchInput';
 import SearchResults from './SearchResults';
 import ReactPaginate from 'react-paginate';
+import logo from './_Logo.png';
 
 class App extends Component {
   constructor(props) {

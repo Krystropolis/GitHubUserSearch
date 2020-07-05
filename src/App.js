@@ -67,10 +67,20 @@ class App extends Component {
     ) {
       count = this.state.searchResults.total_count;
       if (count === 0) {
-        noResults = <div>No results found.</div>;
+        noResults = (
+          <div key="noResultsKey" className="col-12">
+            <p>
+              <em>No results found.</em>
+            </p>
+          </div>
+        );
       }
     }
-    totalHits = <div key="totalHitsKey">Total hits: {count}</div>;
+    totalHits = (
+      <div key="totalHitsKey" className="col-12">
+        Total hits: {count}
+      </div>
+    );
     displayTotal = [noResults, totalHits];
 
     // set up pagination when greater than 1 page of results
@@ -108,10 +118,21 @@ class App extends Component {
 
     return (
       <div>
-        <SearchInput textChange={this.handleSearchChange} />
-        {displayTotal}
-        <SearchResults searchResults={this.state.elements} />
-        {paginationElement}
+        <div className={'jumbotron jumbotron-fluid'}>
+          <div className={'container'}>
+            <h1 className={'display-4 text-center'}>GitHub User Search</h1>
+          </div>
+        </div>
+        <div className={'container'}>
+          <div className={'row'}>
+            <SearchInput textChange={this.handleSearchChange} />
+          </div>
+          <div className={'row'}>{displayTotal}</div>
+          <div className={'row'}>
+            <SearchResults searchResults={this.state.elements} />
+          </div>
+          <div className={'row'}>{paginationElement}</div>
+        </div>
       </div>
     );
   }

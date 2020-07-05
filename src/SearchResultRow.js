@@ -48,29 +48,36 @@ export default class SearchResultsRow extends Component {
         );
       }
       return (
-        <div className="user-row">
-          <div>
-            <a
-              className="component-user-result-row"
-              href={this.state.userData.html_url}
-            >
-              <img
-                alt={this.state.userData.login}
-                src={this.state.userData.avatar_url}
-                className="avatar"
-              />
-              <span className="login">{this.state.userData.login}</span>
-            </a>
+        <div>
+          <div className={'card mb-3'} style={{ maxWidth: '540px' }}>
+            <div className={'row no-gutters'}>
+              <div className={'col-md-4'}>
+                <img
+                  src={this.state.userData.avatar_url}
+                  className={'card-img'}
+                  alt={this.state.userData.login}
+                />
+              </div>
+              <div className={'col-md-8'}>
+                <div className={'card-body'}>
+                  <h5 className={'card-title'}>{this.state.userData.login}</h5>
+                  <small>{this.state.userData.name}</small>
+                  <p className={'card-text'}>{this.state.userData.bio}</p>
+                  {twitterComponent}
+                  <p className={'card-text'}>
+                    <small className={'text-muted'}>
+                      <span className={'col-md-6'}>
+                        Followers: {this.state.userData.followers}
+                      </span>
+                      <span className={'col-md-6'}>
+                        Following: {this.state.userData.following}
+                      </span>
+                    </small>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            <span>Followers: {this.state.userData.followers}</span>
-            <span>Following: {this.state.userData.following}</span>
-          </div>
-          <div>
-            {this.state.userData.name}
-            {this.state.userData.bio}
-          </div>
-          {twitterComponent}
         </div>
       );
     }

@@ -25,26 +25,24 @@ export default class SearchInput extends Component {
 
 	render() {
 		return (
-			<div className="component-search-input">
-				<div>
-					<form
-						onSubmit={this.handleSubmit}
-						className="form"
-						id="userSearchForm"
-					>
-						<label htmlFor="usersearch">Search GitHub:</label>
-						<input
-							type="text"
-							value={this.state.value}
-							placeholder="username"
-							id="usersearch"
-							name="usersearch"
-							onChange={this.handleChange}
-							tabIndex="0"
-						/>
-						<input type="submit" value="Search" />
-					</form>
-				</div>
+			<div className="container component-search-input">
+				<form
+					onSubmit={this.handleSubmit}
+					className="form"
+					id="userSearchForm"
+				>
+					<input
+						className="col-10"
+						type="text"
+						value={this.state.value}
+						placeholder="Supercalafragilisticexpialidocious... enter the username here"
+						id="usersearch"
+						name="usersearch"
+						onChange={this.handleChange}
+						tabIndex="0"
+					/>
+					<input className="col-2" type="submit" value="Search" />
+				</form>
 			</div>
 		);
 	}

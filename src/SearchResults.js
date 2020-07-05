@@ -15,33 +15,11 @@ export default class SearchResults extends Component {
 		};
 	}
 
-	// turns search results into rows
-	createRowsForCurrentPage() {
-		let elements = this.props.searchResults.map(user => (
-			<SearchResultRow
-				key={user.id}
-				login={user.login}
-				avatar_url={user.avatar_url}
-				followers_url={user.followers_url}
-				html_url={user.html_url}
-				organizations_url={user.organizations_url}
-			/>
-		));
-		this.setState({ elements: elements });
-	}
-
 	render() {
 		return (
 			<div className="user-data-results">
 				{this.props.searchResults.map(user => (
-					<SearchResultRow
-						key={user.id}
-						login={user.login}
-						avatar_url={user.avatar_url}
-						followers_url={user.followers_url}
-						html_url={user.html_url}
-						organizations_url={user.organizations_url}
-					/>
+					<SearchResultRow key={user.id} user={user.login} />
 				))}
 			</div>
 		);

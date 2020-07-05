@@ -16,7 +16,6 @@ export default class SearchInput extends Component {
 
 	handleChange = event => {
 		this.setState({ value: event.target.value });
-		//this.props.textChange(event);
 	};
 
 	handleSubmit = event => {
@@ -41,6 +40,7 @@ export default class SearchInput extends Component {
 							id="usersearch"
 							name="usersearch"
 							onChange={this.handleChange}
+							tabIndex="0"
 						/>
 						<input type="submit" value="Search" />
 					</form>

@@ -8,36 +8,42 @@ class App extends Component {
     super(props);
     this.state = {
       searchResults: null,
-      offset: 0,
-      data: [],
       elements: [],
       perPage: 10,
       currentPage: 0,
+      user: null,
     };
   }
 
   // sets elements, passed to search result
   setElementsForCurrentPage() {
-    let elements = this.state.searchResults.items.slice(
-      this.state.offset,
-      this.state.offset + this.state.perPage,
-    );
-    this.setState({ elements: elements });
+    this.setState({ elements: this.state.searchResults.items });
   }
 
   // handles pagination
   handlePageClick = data => {
     const selectedPage = data.selected;
-    const offset = selectedPage * this.state.perPage;
-    this.setState({ currentPage: selectedPage, offset: offset }, () => {
-      this.setElementsForCurrentPage();
+    console.log(selectedPage);
+    this.setState({ currentPage: selectedPage }, () => {
+      this.handleSearchChange(this.state.user);
     });
   };
 
   // handles search input
   handleSearchChange = value => {
+    this.setState({ user: value });
+
     if (value) {
-      fetch('https://api.github.com/search/users?q=' + value)
+      let searchParams = new URLSearchParams('q=' + value);
+      if (this.state.currentPage > 0) {
+        searchParams.append('page', this.state.currentPage);
+      }
+      fetch(
+        'https://api.github.com/search/users?' +
+          searchParams.toString() +
+          '&per_page=' +
+          this.state.perPage,
+      )
         .then(resp => resp.json())
         .then(result => {
           this.setState({ searchResults: result });
@@ -47,7 +53,7 @@ class App extends Component {
           console.error('Error:', err);
         });
     } else {
-      this.setState({ searchResults: null });
+      this.setState({ searchResults: null, elements: [] });
     }
   };
 
@@ -70,21 +76,34 @@ class App extends Component {
 
     // set up pagination when greater than 1 page of results
     let paginationElement;
-    const pages = count > 0 ? Math.ceil(count / this.state.perPage) : 0;
+    const pages =
+      count <= 1000
+        ? Math.ceil(count / this.state.perPage)
+        : Math.ceil(1000 / this.state.perPage); // the GitHub Search API provides up to 1,000 results for each search.
     if (pages > 1) {
       paginationElement = (
-        <ReactPaginate
-          previousLabel={'<'}
-          nextLabel={'>'}
-          breakLabel={'...'}
-          pageCount={pages}
-          marginPagesDisplayed={1}
-          pageRangeDisplayed={5}
-          onPageChange={this.handlePageClick}
-          containerClassName={'pagination'}
-          subContainerClassName={'pages pagination'}
-          activeClassName={'active'}
-        />
+        <nav aria-label="Search results pages">
+          <ReactPaginate
+            previousLabel={'Previous'}
+            nextLabel={'Next'}
+            breakLabel={'...'}
+            pageCount={pages}
+            marginPagesDisplayed={0}
+            pageRangeDisplayed={5}
+            onPageChange={this.handlePageClick}
+            containerClassName={'pagination'}
+            activeClassName={'active'}
+            disabledClassName={'disabled'}
+            pageClassName={'page-item'}
+            pageLinkClassName={'page-link'}
+            breakClassName={'page-item'}
+            breakLinkClassName={'page-link'}
+            previousClassName={'page-item'}
+            previousLinkClassName={'page-link'}
+            nextClassName={'page-item'}
+            nextLinkClassName={'page-link'}
+          />
+        </nav>
       );
     }
 

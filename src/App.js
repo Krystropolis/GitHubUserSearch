@@ -23,7 +23,6 @@ class App extends Component {
   // handles pagination
   handlePageClick = data => {
     const selectedPage = data.selected;
-    console.log(selectedPage);
     this.setState({ currentPage: selectedPage }, () => {
       this.handleSearchChange(this.state.user);
     });

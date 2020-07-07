@@ -35,7 +35,7 @@ export default class SearchInput extends Component {
 						className="col-10"
 						type="text"
 						value={this.state.value}
-						placeholder="Supercalafragilisticexpialidocious... enter the username here"
+						placeholder="Enter username"
 						id="usersearch"
 						name="usersearch"
 						onChange={this.handleChange}

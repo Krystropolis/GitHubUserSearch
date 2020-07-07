@@ -48,7 +48,7 @@ export default class SearchResultsRow extends Component {
         );
       }
       return (
-        <div>
+        <div className={'container'}>
           <div className={'card mb-3'} style={{ maxWidth: '540px' }}>
             <div className={'row no-gutters'}>
               <div className={'col-md-4'}>
@@ -60,7 +60,11 @@ export default class SearchResultsRow extends Component {
               </div>
               <div className={'col-md-8'}>
                 <div className={'card-body'}>
-                  <h5 className={'card-title'}>{this.state.userData.login}</h5>
+                  <h5 className={'card-title'}>
+                    <a href={this.state.userData.html_url}>
+                      {this.state.userData.login}
+                    </a>
+                  </h5>
                   <small>{this.state.userData.name}</small>
                   <p className={'card-text'}>{this.state.userData.bio}</p>
                   {twitterComponent}

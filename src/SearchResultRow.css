@@ -1,6 +1,23 @@
-.avatar {
-	vertical-align: middle;
-	width: 50px;
-	height: 50px;
-	border-radius: 50%;
+h5 {
+	color: var(--darkColor);
+	text-decoration: none;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 2em;
+}
+
+a {
+	color: #0a1930;
+}
+
+a:hover {
+	color: transparent;
+	-webkit-text-stroke: 2px var(--brightColor);
+}
+
+@supports not(-webkit-text-stroke: 2px red) {
+	a:hover {
+		text-shadow: 3px 3px 0 var(--brightColor),
+			-1px -1px 0 var(--brightColor), 1px -1px 0 var(--brightColor),
+			-1px 1px 0 var(--brightColor), 1px 1px 0 var(--brightColor);
+	}
 }

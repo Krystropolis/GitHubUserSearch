@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SearchInput from './SearchInput';
 import SearchResults from './SearchResults';
 import ReactPaginate from 'react-paginate';
-import logo from './_Logo.png';
+import './App.css';
 
 class App extends Component {
   constructor(props) {
@@ -11,7 +11,7 @@ class App extends Component {
       searchResults: null,
       elements: [],
       perPage: 10,
-      currentPage: 0,
+      currentPage: 1,
       user: null,
     };
   }
@@ -23,7 +23,7 @@ class App extends Component {
 
   // handles pagination
   handlePageClick = data => {
-    const selectedPage = data.selected;
+    const selectedPage = data.selected + 1; // selected page is off by one
     this.setState({ currentPage: selectedPage }, () => {
       this.handleSearchChange(this.state.user);
     });
@@ -35,15 +35,9 @@ class App extends Component {
 
     if (value) {
       let searchParams = new URLSearchParams('q=' + value);
-      if (this.state.currentPage > 0) {
-        searchParams.append('page', this.state.currentPage);
-      }
-      fetch(
-        'https://api.github.com/search/users?' +
-          searchParams.toString() +
-          '&per_page=' +
-          this.state.perPage,
-      )
+      searchParams.append('page', this.state.currentPage);
+      searchParams.append('per_page', this.state.perPage);
+      fetch('https://api.github.com/search/users?' + searchParams.toString())
         .then(resp => resp.json())
         .then(result => {
           this.setState({ searchResults: result });
@@ -129,10 +123,12 @@ class App extends Component {
             <SearchInput textChange={this.handleSearchChange} />
           </div>
           <div className={'row'}>{displayTotal}</div>
-          <div className={'row'}>
+          <div className={'row justify-content-center'}>
             <SearchResults searchResults={this.state.elements} />
           </div>
-          <div className={'row'}>{paginationElement}</div>
+          <div className={'row justify-content-center'}>
+            {paginationElement}
+          </div>
         </div>
       </div>
     );

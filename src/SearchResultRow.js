@@ -23,7 +23,7 @@ export default class SearchResultsRow extends Component {
         this.setState({ userData: result });
       })
       .catch(err => {
-        console.error('Error:', err);
+        console.error('Error retrieving user info:', err);
       });
   }
 

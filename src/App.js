@@ -44,7 +44,7 @@ class App extends Component {
           this.setElementsForCurrentPage();
         })
         .catch(err => {
-          console.error('Error:', err);
+          console.error('Error retrieving users:', err);
         });
     } else {
       this.setState({ searchResults: null, elements: [] });

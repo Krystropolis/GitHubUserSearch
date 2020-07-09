@@ -16,9 +16,15 @@ export default class SearchResultsRow extends Component {
     };
   }
 
+  // retrieves data for individual users
   getUserInfo() {
     fetch('https://api.github.com/users/' + this.props.user)
-      .then(resp => resp.json())
+      .then(resp => {
+        if (!resp.ok) {
+          throw new Error(resp.status);
+        }
+        return resp.json();
+      })
       .then(result => {
         this.setState({ userData: result });
       })
@@ -48,7 +54,7 @@ export default class SearchResultsRow extends Component {
         );
       }
       return (
-        <div className={'container'}>
+        <div className={'search-result-row container'}>
           <div className={'card mb-3'} style={{ maxWidth: '540px' }}>
             <div className={'row no-gutters'}>
               <div className={'col-md-4'}>

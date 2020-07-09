@@ -7,14 +7,6 @@ export default class SearchResults extends Component {
 		searchResults: PropTypes.array,
 	};
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			elements: [],
-		};
-	}
-
 	render() {
 		return (
 			<div className="user-data-results">

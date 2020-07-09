@@ -4,6 +4,8 @@ import SearchResults from './SearchResults';
 import ReactPaginate from 'react-paginate';
 import './App.css';
 
+const GITHUB_API = 'https://api.github.com';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -13,12 +15,9 @@ class App extends Component {
       perPage: 10,
       currentPage: 1,
       user: null,
+      coreLimit: null,
+      searchLimit: null,
     };
-  }
-
-  // sets elements, passed to search result
-  setElementsForCurrentPage() {
-    this.setState({ elements: this.state.searchResults.items });
   }
 
   // handles pagination
@@ -29,25 +28,61 @@ class App extends Component {
     });
   };
 
-  // handles search input
-  handleSearchChange = value => {
-    this.setState({ user: value });
+  // get current rate limit from github
+  getRateLimit() {
+    return fetch(GITHUB_API + '/rate_limit')
+      .then(response => response.json())
+      .then(result => {
+        this.setState({
+          searchLimit: result.resources.search,
+          coreLimit: result.rate,
+        });
+        return (
+          result.resources.search.remaining === 0 || result.rate.remaining < 15
+        );
+      })
+      .catch(error => {
+        console.error('Rate limit check failed.');
+      });
+  }
 
-    if (value) {
-      let searchParams = new URLSearchParams('q=' + value);
+  // search for all users with search term
+  searchUsers(rateExceeded) {
+    this.setState({ rateExceeded: rateExceeded });
+    if (!rateExceeded) {
+      let searchParams = new URLSearchParams('q=' + this.state.user);
       searchParams.append('page', this.state.currentPage);
       searchParams.append('per_page', this.state.perPage);
-      fetch('https://api.github.com/search/users?' + searchParams.toString())
-        .then(resp => resp.json())
+      fetch(GITHUB_API + '/search/users?' + searchParams.toString())
+        .then(resp => {
+          if (!resp.ok) {
+            throw new Error(resp.status);
+          }
+          return resp.json();
+        })
         .then(result => {
-          this.setState({ searchResults: result });
-          this.setElementsForCurrentPage();
+          this.setState({
+            searchResults: result,
+            elements: result.items,
+          });
         })
         .catch(err => {
           console.error('Error retrieving users:', err);
         });
-    } else {
+    }
+  }
+
+  // handles search input
+  handleSearchChange = value => {
+    if (!value) {
       this.setState({ searchResults: null, elements: [] });
+    } else {
+      this.setState({ user: value });
+
+      // check rate limit
+      this.getRateLimit().then(response => {
+        this.searchUsers(response);
+      });
     }
   };
 
@@ -111,6 +146,21 @@ class App extends Component {
       );
     }
 
+    // set up rate limit message if limit exceeded
+    let rateLimitMessage;
+    if (this.state.rateExceeded) {
+      const time = Math.max(
+        this.state.searchLimit.reset,
+        this.state.coreLimit.reset,
+      );
+      rateLimitMessage = (
+        <div className="alert alert-danger rate-limit">
+          Rate limit reached. Please try again at{' '}
+          {new Date(time).toTimeString()}.
+        </div>
+      );
+    }
+
     return (
       <div>
         <div className={'jumbotron jumbotron-fluid'}>
@@ -119,7 +169,8 @@ class App extends Component {
           </div>
         </div>
         <div className={'container'}>
-          <div className={'row'}>
+          <div className={'row justify-content-center'}>
+            {rateLimitMessage}
             <SearchInput textChange={this.handleSearchChange} />
           </div>
           <div className={'row'}>{displayTotal}</div>

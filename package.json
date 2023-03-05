@@ -8,7 +8,7 @@
     "react-icons": "^3.10.0",
     "react-native-elements": "^2.0.4",
     "react-paginate": "^6.3.2",
-    "react-scripts": "0.9.5",
+    "react-scripts": "5.0.1",
     "request-rate-limiter": "^2.0.3"
   },
   "devDependencies": {},
